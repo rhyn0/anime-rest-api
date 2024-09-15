@@ -4,7 +4,9 @@ description = "API for tracking comments, reviews, and finding new anime."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "asyncpg>=0.29.0",
     "fastapi>=0.114.2",
+    "greenlet>=3.1.0",
     "pydantic>=2.9.1",
     "sqlmodel>=0.0.22",
     "uvicorn>=0.30.6",
@@ -21,6 +23,7 @@ dev-dependencies = [
     "pre-commit>=3.8.0",
     "pytest>=8.3.3",
     "ruff>=0.6.5",
+    "testcontainers[postgres]>=4.8.1",
 ]
 
 [project.scripts]
@@ -49,6 +52,7 @@ respect-gitignore = true
 # Show fixes in the output.
 show-fixes = true
 target-version = "py312"
+extend-exclude = ["scripts"]
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true
@@ -71,6 +75,9 @@ select = ["ALL"]
     "S101",   # use of 'assert' detected
     "D103",   # Missing docstring in public function
     "ANN201", # Missing return type annotation for public function
+]
+"scripts/*.py" = [
+    "INP001", # Implicit namespace package
 ]
 
 [tool.ruff.lint.flake8-errmsg]
