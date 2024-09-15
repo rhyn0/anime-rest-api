@@ -10,16 +10,19 @@ def get_args(arglist: list[str] | None = None) -> argparse.Namespace:
     """Parse given argslist and return our flags and settings."""
     parser = argparse.ArgumentParser(prog="anime_rest_api.main")
 
-    network_group = parser.add_argument_group("Network Options", prefix_chars="net")
+    network_group = parser.add_argument_group(
+        "network",
+        "Network Options for modifying server runtime",
+    )
     network_group.add_argument(
-        "host",
+        "--host",
         default="localhost",
-        required=False,
         help="What host address to bind running process to listen for connections on",
         dest="host",
     )
     network_group.add_argument(
-        "port",
+        "-p",
+        "--port",
         default=8080,
         type=int,
         help="What port to listen for incoming connections on",
