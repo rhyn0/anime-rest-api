@@ -1,0 +1,101 @@
+[project]
+name = "anime-rest-api"
+version = "0.1.0"
+description = "API for tracking comments, reviews, and finding new anime."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+authors = [{ name = "Ryan Ozawa", email = "ryan.ozawa21@gmail.com" }]
+license = { text = "MIT" }
+classifiers = ["Programming Language :: Python :: 3"]
+
+[tool.uv]
+dev-dependencies = ["pre-commit>=3.8.0", "pytest>=8.3.3", "ruff>=0.6.5"]
+
+[project.scripts]
+hello = "anime_rest_api:hello"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+# Enable autofix for rules that support it.
+fix = true
+# Indent width for long-line violations
+indent-width = 4
+# Same as Black.
+line-length = 88
+# could choose 'full', 'grouped', or 'github'
+output-format = "concise"
+required-version = ">=0.6.5"
+
+# ignore files that are not tracked
+respect-gitignore = true
+# Show fixes in the output.
+show-fixes = true
+target-version = "py312"
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+line-ending = "lf"
+
+[tool.ruff.lint]
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+# all rules are fixable
+fixable = ["ALL"]
+unfixable = []
+ignore = [
+    "D100", # Missing docstring in public module
+]
+select = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["D104"] # ignore missing docstring in __init__.py files
+"tests/**/*.py" = [
+    "S101",   # use of 'assert' detected
+    "D103",   # Missing docstring in public function
+    "ANN201", # Missing return type annotation for public function
+]
+
+[tool.ruff.lint.flake8-errmsg]
+# Maximum string length for string literals in exception messages.
+max-string-length = 20
+
+[tool.ruff.lint.flake8-pytest-style]
+# purely for code style consistency, pytest handles both the same
+# Boolean flag specifying whether @pytest.fixture() without parameters should have parentheses.
+fixture-parentheses = false
+# Boolean flag specifying whether @pytest.mark.foo() without parameters should have parentheses.
+mark-parentheses = false
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+# Forces all from imports to appear on their own line.
+force-single-line = true
+# Don't sort straight-style imports (like import sys) before from-style imports (like from itertools import groupby).
+# Instead, sort the imports by module, independent of import style.
+force-sort-within-sections = true
+# our code packages
+known-first-party = ["anime_rest_api"]
+
+
+[tool.ruff.lint.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pytest.ini_options]
+addopts = ["--doctest-modules", "--doctest-continue-on-failure"]
+minversion = "8.0"
+testpaths = ["tests", "src/anime_rest_api"]
+doctest_optionflags = "ELLIPSIS NORMALIZE_WHITESPACE"
+
+[tool.mypy]
+python_version = "3.12"
+warn_unreachable = true
+warn_unused_ignores = true
+warn_unused_configs = true
