@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-python@v5.2.0
         with:
           # don't have to supply, would auto resolve to this otherwise
-          python-version: .python-version
+          python-version-file: .python-version
 
       - name: Restore uv cache
         id: uv-cache
