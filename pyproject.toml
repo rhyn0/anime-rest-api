@@ -10,7 +10,12 @@ license = { text = "MIT" }
 classifiers = ["Programming Language :: Python :: 3"]
 
 [tool.uv]
-dev-dependencies = ["pre-commit>=3.8.0", "pytest>=8.3.3", "ruff>=0.6.5"]
+dev-dependencies = [
+    "mypy>=1.11.2",
+    "pre-commit>=3.8.0",
+    "pytest>=8.3.3",
+    "ruff>=0.6.5",
+]
 
 [project.scripts]
 hello = "anime_rest_api:hello"
@@ -95,6 +100,7 @@ testpaths = ["tests", "src/anime_rest_api"]
 doctest_optionflags = "ELLIPSIS NORMALIZE_WHITESPACE"
 
 [tool.mypy]
+mypy_path = "src/anime_rest_api"
 python_version = "3.12"
 warn_unreachable = true
 warn_unused_ignores = true

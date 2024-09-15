@@ -7,6 +7,10 @@
     "ruff.lint.enable": true,
     "ruff.importStrategy": "fromEnvironment",
     "ruff.nativeServer": "on",
+    "mypy-type-checker.importStrategy": "fromEnvironment",
+    "mypy-type-checker.path": [
+        "${workspaceFolder}/.venv/bin/mypy",
+    ],
     "[python]": {
         "diffEditor.ignoreTrimWhitespace": false,
         "gitlens.codeLens.symbolScopes": [
