@@ -3,7 +3,13 @@ name = "anime-rest-api"
 description = "API for tracking comments, reviews, and finding new anime."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.114.2",
+    "pydantic>=2.9.1",
+    "sqlmodel>=0.0.22",
+    "uvicorn>=0.30.6",
+    "uvloop>=0.20.0",
+]
 authors = [{ name = "Ryan Ozawa", email = "ryan.ozawa21@gmail.com" }]
 license = { text = "MIT" }
 classifiers = ["Programming Language :: Python :: 3"]
@@ -108,3 +114,7 @@ python_version = "3.12"
 warn_unreachable = true
 warn_unused_ignores = true
 warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
