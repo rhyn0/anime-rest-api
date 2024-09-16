@@ -1,41 +1,64 @@
-import os
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+from typing import Self
 
 from sqlalchemy import URL
-from sqlalchemy import Engine
-from sqlmodel import create_engine
+from sqlalchemy.ext.asyncio import AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine
 
-from .errors import MissingDatabaseUrlError
-
-_engine: Engine | None = None
+from .errors import InvalidDbConnectionStateError
 
 
-def get_engine(*, url: str | URL | None = None, echo: bool = False) -> Engine:
-    """Connect engine to database based on arguments.
+class DatabaseConnection:
+    """Wrapper object to hold database connection information."""
 
-    Caches engine to global scope so multiple calls to this function
-    don't create more engines.
+    _instance: Self
 
-    Uses environment variable: ANIME_API_DATABASE_URL
+    def __new__(cls, *_args: tuple, **_kwargs: dict) -> Self:
+        """Instantiate object in Singelton pattern.
 
-    Args:
-        url (str | URL | None, optional): Source to build engine connection from.
-            If not set, uses environment variables. Defaults to None.
-        echo (bool, optional): Whether to echo SQL statements to stderr. Default False.
+        Raises error if instance already exists.
+        """
+        if hasattr(cls, "_instance"):
+            msg = f"{cls.__name__}.__new__"
+            raise InvalidDbConnectionStateError(msg)
+        cls._instance = super().__new__(cls)
+        return cls._instance
 
-    Raises:
-        MissingDatabaseUrlError - if no connection url is provided.
+    def __init__(self, db_url: str | URL, *, echo: bool = False) -> None:
+        """Initialize DatabaseConnection object with database url.
 
-    Returns:
-        Engine: Database connection engine
-    """
-    global _engine  # noqa: PLW0603
-    if _engine is not None:
-        return _engine
-    if url is None:
-        try:
-            url = os.environ["ANIME_API_DATABASE_URL"]
-        except KeyError:
-            raise MissingDatabaseUrlError from None
+        Args:
+            db_url (str | URL | None): Source to build engine connection from.
+                If not set, uses environment variables. Defaults to None.
+            echo (bool, optional): Whether to echo SQL statements to stderr.
+                Default False.
+        """
+        self.echo = echo
+        self._engine = create_async_engine(db_url, echo=echo)
+        self._session = async_sessionmaker(self._engine)
 
-    _engine = create_engine(url, echo=echo)
-    return _engine
+    def __repr__(self) -> str:
+        """Debug representation of the object."""
+        return f"{self.__class__.__name__}(url={self._engine.url.host!r}, echo={self.echo})"  # noqa: E501
+
+    @classmethod
+    def instance(cls) -> Self:
+        """Return the instance of this class."""
+        if not hasattr(cls, "_instance"):
+            msg = f"{cls.__name__}.instance"
+            raise InvalidDbConnectionStateError(msg)
+        return cls._instance
+
+    @property
+    def engine(self) -> AsyncEngine:
+        """Public getter for the engine."""
+        return self._engine
+
+    @asynccontextmanager
+    async def session(self) -> AsyncGenerator[AsyncSession, None]:
+        """Public getter for the session."""
+        async with self._session() as session:
+            yield session

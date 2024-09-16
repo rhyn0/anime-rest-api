@@ -55,7 +55,7 @@ target-version = "py312"
 extend-exclude = ["scripts"]
 
 [tool.ruff.format]
-skip-magic-trailing-comma = true
+skip-magic-trailing-comma = false
 line-ending = "lf"
 
 [tool.ruff.lint]

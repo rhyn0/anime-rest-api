@@ -1,14 +1,17 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+import os
 
 from fastapi import FastAPI
 
 from anime_rest_api import __version__
+from anime_rest_api.db import DatabaseConnection
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
     """Run on-startup and on-shutdown code."""
+    DatabaseConnection(os.environ["ANIME_API_DATABASE_URL"])
     yield
 
 

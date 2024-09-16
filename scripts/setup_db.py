@@ -3,10 +3,10 @@ import argparse
 import asyncio
 import sys
 
-from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.schema import CreateSchema
 
-from anime_rest_api.db.models import DB_METADATA
+from anime_rest_api.db import DatabaseConnection
+from anime_rest_api.db import DB_METADATA
 
 
 def get_args() -> argparse.Namespace:
@@ -16,8 +16,8 @@ def get_args() -> argparse.Namespace:
 
 
 async def main(args: argparse.Namespace) -> int:
-    engine = create_async_engine(args.database_url, echo=True)
-    async with engine.begin() as conn:
+    dbc = DatabaseConnection(args.database_url, echo=True)
+    async with dbc.engine.begin() as conn:
         await conn.run_sync(DB_METADATA.drop_all)
         await conn.execute(CreateSchema(DB_METADATA.schema))
         await conn.run_sync(DB_METADATA.create_all)
