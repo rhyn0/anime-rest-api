@@ -1,5 +1,5 @@
 from fastapi import Depends
 
-from anime_rest_api.db import DatabaseConnection
+from anime_rest_api.db.connection import Db
 
-DbDependency = Depends(DatabaseConnection.instance().session)
+DbDependency = Depends(Db.session)

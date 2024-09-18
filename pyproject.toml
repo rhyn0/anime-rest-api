@@ -65,7 +65,9 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 fixable = ["ALL"]
 unfixable = []
 ignore = [
-    "D100", # Missing docstring in public module
+    "D100",   # Missing docstring in public module
+    "FIX002", # Line contains TODO, consider resolving issue
+    "TD003",  # Missing issue link on line with TODO
 ]
 select = ["ALL"]
 

@@ -3,10 +3,11 @@ import argparse
 import asyncio
 import sys
 
-from sqlalchemy.schema import CreateSchema
+from sqlalchemy.schema import CreateSchema, DropSchema
+from sqlalchemy.ext.asyncio import AsyncConnection
 
 from anime_rest_api.db import DatabaseConnection
-from anime_rest_api.db import DB_METADATA
+from anime_rest_api.db import DB_METADATA, setup_db
 
 
 def get_args() -> argparse.Namespace:
@@ -14,13 +15,16 @@ def get_args() -> argparse.Namespace:
     parser.add_argument("database_url", metavar="<URL>")
     return parser.parse_args()
 
+async def clean_db(conn: AsyncConnection) -> None:
+    await conn.run_sync(DB_METADATA.drop_all)
+    await conn.execute(DropSchema(DB_METADATA.schema, cascade=True))
+
 
 async def main(args: argparse.Namespace) -> int:
     dbc = DatabaseConnection(args.database_url, echo=True)
     async with dbc.engine.begin() as conn:
-        await conn.run_sync(DB_METADATA.drop_all)
-        await conn.execute(CreateSchema(DB_METADATA.schema))
-        await conn.run_sync(DB_METADATA.create_all)
+        await clean_db(conn)
+        await setup_db(conn)
     return 0
 
 

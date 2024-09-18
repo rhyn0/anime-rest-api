@@ -1,17 +1,19 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-import os
 
 from fastapi import FastAPI
 
 from anime_rest_api import __version__
-from anime_rest_api.db import DatabaseConnection
+from anime_rest_api.api.routers import SHOW_ROUTER
+from anime_rest_api.db import setup_db
+from anime_rest_api.db.connection import Db
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
     """Run on-startup and on-shutdown code."""
-    DatabaseConnection(os.environ["ANIME_API_DATABASE_URL"])
+    async with Db.engine.begin() as conn:
+        await setup_db(conn)
     yield
 
 
@@ -25,5 +27,5 @@ def create_app() -> FastAPI:
         redoc_url=None,
         lifespan=lifespan,
     )
-    # disable RET for here as we will augment later with more calls
-    return app  # noqa: RET504
+    app.include_router(SHOW_ROUTER)
+    return app

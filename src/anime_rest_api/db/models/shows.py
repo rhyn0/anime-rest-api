@@ -4,6 +4,10 @@ from typing import Annotated
 from sqlmodel import Field
 from sqlmodel import SQLModel
 
+from anime_rest_api.db.models.show_details import ShowContentRating
+from anime_rest_api.db.models.show_details import ShowStatus
+from anime_rest_api.db.models.show_details import ShowType
+
 from .base import DB_METADATA
 
 
@@ -13,6 +17,9 @@ class ShowBase(SQLModel):
     name: Annotated[str, Field(..., min_length=1)]
     release_date: dt.date
     finish_date: dt.date | None = None
+    show_type: ShowType
+    status: ShowStatus
+    content_rating: ShowContentRating
 
 
 class Show(ShowBase, table=True):
@@ -45,3 +52,6 @@ class ShowUpdate(SQLModel):
     name: str | None = None
     release_date: dt.date | None = None
     finish_date: dt.date | None = None
+    show_type: ShowType | None = None
+    status: ShowStatus | None = None
+    content_rating: ShowContentRating | None = None

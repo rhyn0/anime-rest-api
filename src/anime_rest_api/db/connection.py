@@ -1,5 +1,6 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+import os
 from typing import Self
 
 from sqlalchemy import URL
@@ -62,3 +63,6 @@ class DatabaseConnection:
         """Public getter for the session."""
         async with self._session() as session:
             yield session
+
+
+Db = DatabaseConnection(os.environ["ANIME_API_DATABASE_URL"], echo=False)
