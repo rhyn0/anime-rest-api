@@ -27,5 +27,9 @@ repos:
     rev: "v1.11.2"
     hooks:
       - id: mypy
-        exclude: ^tests/.*$
+        additional_dependencies: [
+          fastapi==0.114.2,
+          uvicorn==0.30.6,
+          sqlmodel==0.0.22
+        ]
         args: ["--config-file=pyproject.toml"]

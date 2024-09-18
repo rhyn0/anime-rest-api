@@ -3,7 +3,15 @@ name = "anime-rest-api"
 description = "API for tracking comments, reviews, and finding new anime."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "asyncpg>=0.29.0",
+    "fastapi>=0.114.2",
+    "greenlet>=3.1.0",
+    "pydantic>=2.9.1",
+    "sqlmodel>=0.0.22",
+    "uvicorn>=0.30.6",
+    "uvloop>=0.20.0",
+]
 authors = [{ name = "Ryan Ozawa", email = "ryan.ozawa21@gmail.com" }]
 license = { text = "MIT" }
 classifiers = ["Programming Language :: Python :: 3"]
@@ -13,8 +21,10 @@ dynamic = ["version"]
 dev-dependencies = [
     "mypy>=1.11.2",
     "pre-commit>=3.8.0",
+    "pytest-env>=1.1.5",
     "pytest>=8.3.3",
     "ruff>=0.6.5",
+    "testcontainers[postgres]>=4.8.1",
 ]
 
 [project.scripts]
@@ -43,9 +53,10 @@ respect-gitignore = true
 # Show fixes in the output.
 show-fixes = true
 target-version = "py312"
+extend-exclude = ["scripts"]
 
 [tool.ruff.format]
-skip-magic-trailing-comma = true
+skip-magic-trailing-comma = false
 line-ending = "lf"
 
 [tool.ruff.lint]
@@ -55,7 +66,9 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 fixable = ["ALL"]
 unfixable = []
 ignore = [
-    "D100", # Missing docstring in public module
+    "D100",   # Missing docstring in public module
+    "FIX002", # Line contains TODO, consider resolving issue
+    "TD003",  # Missing issue link on line with TODO
 ]
 select = ["ALL"]
 
@@ -65,6 +78,9 @@ select = ["ALL"]
     "S101",   # use of 'assert' detected
     "D103",   # Missing docstring in public function
     "ANN201", # Missing return type annotation for public function
+]
+"scripts/*.py" = [
+    "INP001", # Implicit namespace package
 ]
 
 [tool.ruff.lint.flake8-errmsg]
@@ -102,9 +118,16 @@ minversion = "8.0"
 testpaths = ["tests", "src/anime_rest_api"]
 doctest_optionflags = "ELLIPSIS NORMALIZE_WHITESPACE"
 
+[tool.pytest_env]
+ANIME_API_DATABASE_URL = "postgresql+asyncpg://postgres:password@localhost:5432/test"
+
 [tool.mypy]
 mypy_path = "src/anime_rest_api"
 python_version = "3.12"
 warn_unreachable = true
 warn_unused_ignores = true
 warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true

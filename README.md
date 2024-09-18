@@ -23,6 +23,16 @@ Since this is meant to be a deployable application, the source is structured in 
 
 For more info on that see `pyproject.toml` for the **build-system** and other configuration options.
 
+### Environment Variables
+
+This project has configurable behavior by setting Environment variables for the process. All variables are prefixed by `ANIME_API_`. A shortlist includes:
+
+- DATABASE_URL - how to connect to our SQL database.
+
+## Database
+
+Most of our code will be existing in an async runtime, we use [asyncpg](https://magicstack.github.io/asyncpg/current/index.html) as a Postgres Driver. Meaning the database is Postgres. In professional experience, this is the most versatile database for general purpose usage.
+
 ### Dependency and Virtual Environment Management
 
 This project uses [UV](https://docs.astral.sh/uv/) to manage virtual environments and dependencies.
