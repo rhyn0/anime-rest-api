@@ -1,0 +1,5 @@
+kind: Added
+body: Shows endpoints, now able to CRUD a simple model of a show
+time: 2024-09-18T00:19:41.311733-07:00
+custom:
+  Author: Ryan Ozawa
