@@ -27,7 +27,7 @@ class DatabaseConnection:
         cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, db_url: str | URL, *, echo: bool = False) -> None:
+    def __init__(self, db_url: str | URL | None, *, echo: bool = False) -> None:
         """Initialize DatabaseConnection object with database url.
 
         Args:
@@ -36,6 +36,8 @@ class DatabaseConnection:
             echo (bool, optional): Whether to echo SQL statements to stderr.
                 Default False.
         """
+        if db_url is None:
+            return
         self.echo = echo
         self._engine = create_async_engine(db_url, echo=echo)
         self._session = async_sessionmaker(self._engine)
@@ -63,4 +65,4 @@ class DatabaseConnection:
             yield session
 
 
-Db = DatabaseConnection(os.environ["ANIME_API_DATABASE_URL"], echo=False)
+Db = DatabaseConnection(os.getenv("ANIME_API_DATABASE_URL"), echo=False)
