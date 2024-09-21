@@ -1,0 +1,6 @@
+kind: Internal
+body: Vscode will no longer show cache files in the explorer, is toggle-able using
+  extension `amodio.toggle-excluded-files`
+time: 2024-09-29T01:54:04.716501-07:00
+custom:
+  Author: rhyn0
