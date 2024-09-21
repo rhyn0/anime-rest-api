@@ -35,5 +35,19 @@
         "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
         "pyproject.toml": "uv.lock",
     },
-    "explorer.fileNesting.expand": true
+    "explorer.fileNesting.expand": true,
+    "toggleexcludedfiles.explorer.enabled": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/.venv": true,
+        "**/.mypy_cache": true,
+        "**/.pytest_cache": true,
+        "**/__pycache__": true,
+        "**/.ruff_cache": true,
+    }
 }
