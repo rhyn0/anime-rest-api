@@ -9,6 +9,7 @@ dependencies = [
     "fastapi>=0.114.2",
     "greenlet>=3.1.0",
     "pydantic>=2.9.1",
+    "python-jose[cryptography]>=3.3.0",
     "sqlmodel>=0.0.22",
     "uvicorn>=0.30.6",
     "uvloop>=0.20.0",
@@ -26,6 +27,7 @@ dev-dependencies = [
     "pytest>=8.3.3",
     "ruff>=0.6.5",
     "testcontainers[postgres]>=4.8.1",
+    "types-python-jose>=3.3.4.20240106",
 ]
 
 [project.scripts]
@@ -82,6 +84,9 @@ select = ["ALL"]
 ]
 "scripts/*.py" = [
     "INP001", # Implicit namespace package
+]
+"src/anime_rest_api/api/routers/**.py" = [
+    "ANN201", # Missing return type annotation for public function
 ]
 
 [tool.ruff.lint.flake8-errmsg]

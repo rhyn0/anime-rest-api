@@ -171,7 +171,7 @@ async def update_user(
     return db_user
 
 
-async def delete_show(session: AsyncSession, user_id: int) -> UserRead:
+async def delete_user(session: AsyncSession, user_id: int) -> UserRead:
     """Delete a show.
 
     Args:

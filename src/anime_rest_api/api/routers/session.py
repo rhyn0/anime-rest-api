@@ -12,7 +12,7 @@ ROUTER = APIRouter()
 
 
 @ROUTER.post("/login")
-def login_route() -> None:
+def login_route():
     """Login a user."""
 
 

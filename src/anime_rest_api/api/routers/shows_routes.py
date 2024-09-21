@@ -7,11 +7,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from anime_rest_api.api.common_query import limit_and_offset_query
 from anime_rest_api.api.dependencies import DbDependency
 from anime_rest_api.api.models import ShowResponseList
-from anime_rest_api.db.crud import create_show
-from anime_rest_api.db.crud import delete_show
-from anime_rest_api.db.crud import get_show
-from anime_rest_api.db.crud import list_shows
-from anime_rest_api.db.crud import update_show
+from anime_rest_api.db.crud.show_operations import create_show
+from anime_rest_api.db.crud.show_operations import delete_show
+from anime_rest_api.db.crud.show_operations import get_show
+from anime_rest_api.db.crud.show_operations import list_shows
+from anime_rest_api.db.crud.show_operations import update_show
 from anime_rest_api.db.models.content import ShowCreate
 from anime_rest_api.db.models.content import ShowRead
 from anime_rest_api.db.models.content import ShowUpdate
