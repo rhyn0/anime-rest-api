@@ -15,6 +15,8 @@ kinds:
     auto: major
   - label: Fixed
     auto: patch
+  - label: Internal
+    auto: none
 newlines:
   afterChange: 0
   afterChangelogHeader: 0

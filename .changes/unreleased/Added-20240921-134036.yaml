@@ -1,0 +1,6 @@
+kind: Added
+body: User table to database under new schema. Routes to interact with that table
+  that require Bearer credentials of the JWT
+time: 2024-09-21T13:40:36.994053-07:00
+custom:
+  Author: Ryan Ozawa
