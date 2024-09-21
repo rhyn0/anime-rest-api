@@ -4,11 +4,10 @@ from typing import Annotated
 from sqlmodel import Field
 from sqlmodel import SQLModel
 
-from anime_rest_api.db.models.show_details import ShowContentRating
-from anime_rest_api.db.models.show_details import ShowStatus
-from anime_rest_api.db.models.show_details import ShowType
-
-from .base import DB_METADATA
+from .base import CONTENT_METADATA
+from .show_details import ShowContentRating
+from .show_details import ShowStatus
+from .show_details import ShowType
 
 
 class ShowBase(SQLModel):
@@ -26,7 +25,7 @@ class Show(ShowBase, table=True):
     """Database model for a show."""
 
     __tablename__ = "shows"
-    metadata = DB_METADATA
+    metadata = CONTENT_METADATA
 
     show_id: int | None = Field(None, primary_key=True)
 
