@@ -83,6 +83,9 @@ select = ["ALL"]
 "scripts/*.py" = [
     "INP001", # Implicit namespace package
 ]
+"src/anime_rest_api/api/routers/**.py" = [
+    "ANN201", # Missing return type annotation for public function
+]
 
 [tool.ruff.lint.flake8-errmsg]
 # Maximum string length for string literals in exception messages.
