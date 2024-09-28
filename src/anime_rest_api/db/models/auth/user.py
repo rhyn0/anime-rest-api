@@ -23,10 +23,29 @@ class User(UserBase, table=True):
     metadata = AUTH_METADATA
 
     user_id: int | None = Field(None, primary_key=True)
+    session_version: int = 1
+    """Make this attribute be an internal version of the user's session.
+
+    When a logout happens we bump this value upwards to invalidate refresh tokens from
+    this session.
+    """
 
 
-class UserRead(UserBase):
-    """Model for reading a user from the database."""
+class UserRead(User):
+    """Model for reading a user from the database.
+
+    This differs from `UserPublic` because of the session_version field.
+    This model should be the return when interacting with the database.
+    """
+
+    user_id: int
+
+
+class UserPublic(UserBase):
+    """Model for reading a user from the database.
+
+    This is the model that is returned to the client.
+    """
 
     user_id: int
 

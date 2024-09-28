@@ -1,0 +1,6 @@
+kind: Added
+body: New model that represents public information of a user, that which we can return
+  from endpoints. Split concerns about private/internal only data
+time: 2024-09-29T12:26:06.731054-07:00
+custom:
+  Author: rhyn0
