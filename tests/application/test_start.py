@@ -23,6 +23,7 @@ class TestDatabase:
     @pytest.mark.asyncio
     @pytest.mark.usefixtures("test_client_lifespan")
     async def test_database_schema_exists(self, pg_engine: AsyncEngine) -> None:
+        # test that auth schema exists after startup
         async with pg_engine.connect() as conn:
             result = await conn.execute(
                 text(

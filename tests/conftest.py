@@ -48,13 +48,16 @@ def pg_engine(
 
 
 @pytest.fixture(scope="module")
-def overriden_app(
-    pg_engine: AsyncEngine,
-) -> TestClient:
-    sessionmaker = async_sessionmaker(pg_engine, expire_on_commit=False)
+def sessions(pg_engine: AsyncEngine) -> async_sessionmaker:
+    return async_sessionmaker(pg_engine, expire_on_commit=False)
 
+
+@pytest.fixture(scope="module")
+def overriden_app(
+    sessions: async_sessionmaker,
+) -> TestClient:
     def override_db_session() -> Iterator[AsyncSession]:
-        with sessionmaker() as session:
+        with sessions() as session:
             yield session
 
     app = create_app()

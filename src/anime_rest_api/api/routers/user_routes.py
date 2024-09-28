@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter
@@ -12,6 +13,7 @@ from anime_rest_api.api.models.sessions import JwtUser
 from anime_rest_api.db.crud.user_operations import list_users
 
 ROUTER = APIRouter(prefix="/users", tags=["users", "auth"])
+LOG = logging.getLogger(f"anime-api.{__name__}")
 
 
 @ROUTER.get("", response_model=UserResponseList)
@@ -23,12 +25,12 @@ async def list_users_route(
 ):
     """List users in a paginated way."""
     limit, offset = limit_and_offset
+    LOG.info("Requesting user %s", requesting_user)
     users = list(
         await list_users(
             session,
             offset,
             limit + 1,
-            requesting_user.model_dump(by_alias=False),
         ),
     )
     has_more = len(users) > limit
