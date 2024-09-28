@@ -57,6 +57,21 @@ class LoginResponse(Base):
         Field(..., min_length=32, description="JWT refresh token."),
     ]
     """JWT refresh token."""
+    expires_at: Annotated[
+        int,
+        Field(..., description="Access token expiration time."),
+    ]
+    """Access token expiration time."""
+    refresh_expires_at: Annotated[
+        int,
+        Field(..., description="Refresh token expiration time."),
+    ]
+    """Refresh token expiration time."""
+    version: Annotated[
+        int,
+        Field(..., description="User session version."),
+    ]
+    """User session version."""
 
 
 class RefreshRequest(Base):
@@ -114,18 +129,17 @@ def refresh_token_claims_from_user(user: UserRead) -> "ApiRefreshJwt":
     )
 
 
-def build_access_token(user: UserRead) -> str:
+def build_access_token(claims: dict) -> str:
     """Build a JWT access token for the user."""
     return jwt.encode(
-        access_token_claims_from_user(user).model_dump(by_alias=True),
+        claims,
         _SECRET,
         algorithm="HS256",
     )
 
 
-def build_refresh_token(user: UserRead, access_token: str) -> str:
+def build_refresh_token(claims: dict, access_token: str) -> str:
     """Build a refresh token for the user."""
-    claims = refresh_token_claims_from_user(user).model_dump(by_alias=True)
     LOG.debug("Building refresh token with claims %s", claims)
     return jwt.encode(
         claims,
@@ -170,7 +184,7 @@ def decode_access_token(tok: str, *, verify_exp: bool = True) -> "ApiAccessJwt":
     )
 
 
-def decode_refresh_token(refresh_tok: str, access_tok: str) -> "ApiRefreshJwt":
+def decode_refresh_token(refresh_tok: str) -> "ApiRefreshJwt":
     """Parse a JWT refresh token for the user.
 
     If the token does not match our specifications, it will raise an error.
@@ -194,7 +208,6 @@ def decode_refresh_token(refresh_tok: str, access_tok: str) -> "ApiRefreshJwt":
             algorithms=["HS256"],
             audience=_JWT_AUD,
             issuer=_JWT_ISS,
-            access_token=access_tok,
             options={
                 "require_aud": True,
                 "require_iat": True,
