@@ -14,7 +14,7 @@ from anime_rest_api.db.connection import Db
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
     """Run on-startup and on-shutdown code."""
-    async with Db.engine.begin() as conn:
+    async with Db.instance().engine.begin() as conn:
         await setup_db(conn)
     yield
 
