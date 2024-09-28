@@ -32,4 +32,4 @@ async def list_users_route(
         ),
     )
     has_more = len(users) > limit
-    return UserResponseList(users=users[:limit], has_more=has_more)
+    return {"users": users[:limit], "has_more": has_more}
