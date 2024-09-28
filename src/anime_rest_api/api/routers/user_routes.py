@@ -22,4 +22,4 @@ async def list_users_route(
     limit, offset = limit_and_offset
     users = list(await list_users(session, offset, limit + 1))
     has_more = len(users) > limit
-    return UserResponseList(users=users[:limit], has_more=has_more)
+    return {"users": users[:limit], "has_more": has_more}
