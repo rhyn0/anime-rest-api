@@ -2,6 +2,7 @@ from collections.abc import Sequence
 
 from sqlalchemy import ColumnElement
 from sqlalchemy import Function
+from sqlalchemy import Result
 from sqlalchemy import func
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -58,7 +59,6 @@ async def list_users(
         session (AsyncSession): Database session
         offset (int): Offset for pagination
         limit (int): Limit for pagination
-        requesting_user (UserRead): User making the request
 
     Returns:
         Sequence[UserRead]: List of users
@@ -66,9 +66,9 @@ async def list_users(
     # issue here where mypy detects that the column is int | None
     # but the database version is int
     statement = select(User).order_by(User.user_id).offset(offset).limit(limit)  # type: ignore[arg-type]
-    result = await session.execute(statement)
+    result: Result[tuple[UserRead]] = await session.execute(statement)
     # since this is coming from DB, the UserRead model is correct as `user_id` is set
-    return result.scalars().all()  # type: ignore[return-value]
+    return result.scalars().all()
 
 
 async def get_user(
