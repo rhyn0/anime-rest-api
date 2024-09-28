@@ -1,0 +1,5 @@
+kind: Internal
+body: Add GitHub action to check that all PRs introduce a CHANGELOG fragement
+time: 2024-09-28T13:20:01.213543-07:00
+custom:
+  Author: Ryan Ozawa
