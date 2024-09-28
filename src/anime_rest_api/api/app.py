@@ -20,7 +20,7 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
     logging.config.dictConfig(
         LogConfig(LOGGER_NAME="anime-api", LOG_LEVEL="DEBUG").model_dump(),
     )
-    async with Db.engine.begin() as conn:
+    async with Db.instance().engine.begin() as conn:
         await setup_db(conn)
     yield
 

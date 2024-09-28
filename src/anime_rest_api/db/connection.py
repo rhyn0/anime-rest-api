@@ -17,13 +17,9 @@ class DatabaseConnection:
     _instance: Self
 
     def __new__(cls, *_args: tuple, **_kwargs: dict) -> Self:
-        """Instantiate object in Singelton pattern.
-
-        Raises error if instance already exists.
-        """
-        if hasattr(cls, "_instance"):
-            msg = f"{cls.__name__}.__new__"
-            raise InvalidDbConnectionStateError(msg)
+        """Instantiate object in Singelton pattern."""
+        if hasattr(cls, "_instance") and cls._instance is not None:
+            return cls._instance
         cls._instance = super().__new__(cls)
         return cls._instance
 
