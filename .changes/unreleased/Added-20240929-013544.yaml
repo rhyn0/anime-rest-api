@@ -1,0 +1,6 @@
+kind: Added
+body: Add tests defining expectations around startup events that will occur for this
+  appliction
+time: 2024-09-29T01:35:44.355154-07:00
+custom:
+  Author: rhyn0
