@@ -28,6 +28,14 @@ For more info on that see `pyproject.toml` for the **build-system** and other co
 This project has configurable behavior by setting Environment variables for the process. All variables are prefixed by `ANIME_API_`. A shortlist includes:
 
 - DATABASE_URL - how to connect to our SQL database.
+- SECRET - encoding string for our JWTs
+
+Environment variables will be loaded using `python-dotenv`. Run the following to place the file properly and then edit the values as necessary:
+
+```bash
+cp ./src/anime_rest_api/.env.template ./src/anime_rest_api/.env.production
+```
+
 
 ## Database
 

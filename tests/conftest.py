@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -9,9 +10,12 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 from testcontainers.postgres import PostgresContainer
 
-from anime_rest_api.api.app import create_app
-from anime_rest_api.api.dependencies import Db
-from anime_rest_api.db.connection import DatabaseConnection
+# make sure .env.production exists
+(Path(__file__).parents[1] / ".env.production").touch()
+
+from anime_rest_api.api.app import create_app  # noqa: E402
+from anime_rest_api.api.dependencies import Db  # noqa: E402
+from anime_rest_api.db.connection import DatabaseConnection  # noqa: E402
 
 
 @pytest.fixture(scope="session")
