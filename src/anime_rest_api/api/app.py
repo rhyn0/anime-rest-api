@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from anime_rest_api import __version__
+from anime_rest_api.api.routers import SESSION_ROUTER
 from anime_rest_api.api.routers import SHOW_ROUTER
 from anime_rest_api.api.routers import USER_ROUTER
 from anime_rest_api.db import setup_db
@@ -30,4 +31,5 @@ def create_app() -> FastAPI:
     )
     app.include_router(SHOW_ROUTER)
     app.include_router(USER_ROUTER)
+    app.include_router(SESSION_ROUTER)
     return app

@@ -36,10 +36,12 @@ class UnexpectedDbError(DatabaseError):
         self.args = (f"{self.args[0]} - {note}",)
 
 
-class EntryNotFoundError(Exception):
+class EntryNotFoundError(DatabaseError):
     """Raised when an entry is not found in the database."""
 
-    def __init__(self, table: str, entry_id: int) -> None:
+    entry_id: int | str
+
+    def __init__(self, table: str, entry_id: int | str) -> None:
         """Initialize the error with the missing entry id."""
         super().__init__(table, "READ")
         self.entry_id = entry_id
