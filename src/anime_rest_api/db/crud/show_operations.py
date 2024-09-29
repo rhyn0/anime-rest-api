@@ -3,9 +3,9 @@ from collections.abc import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from anime_rest_api.db.models.shows import Show
-from anime_rest_api.db.models.shows import ShowCreate
-from anime_rest_api.db.models.shows import ShowUpdate
+from anime_rest_api.db.models.content import Show
+from anime_rest_api.db.models.content import ShowCreate
+from anime_rest_api.db.models.content import ShowUpdate
 
 from .errors import EntryNotFoundError
 

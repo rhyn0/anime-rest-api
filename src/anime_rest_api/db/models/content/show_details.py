@@ -2,7 +2,7 @@ import enum
 
 from sqlmodel import Enum
 
-from anime_rest_api.db.models.base import DB_METADATA
+from .base import CONTENT_METADATA
 
 ### Python Enums usable in Pydantic models and code
 
@@ -36,10 +36,10 @@ class ShowContentRating(enum.StrEnum):
 
 ### SqlAlchemy Enum for creating the Enum inside the database
 
-ShowTypeEnum = Enum(ShowType, name="show_type_enum", metadata=DB_METADATA)
-ShowStatusEnum = Enum(ShowStatus, name="show_status_enum", metadata=DB_METADATA)
+ShowTypeEnum = Enum(ShowType, name="show_type_enum", metadata=CONTENT_METADATA)
+ShowStatusEnum = Enum(ShowStatus, name="show_status_enum", metadata=CONTENT_METADATA)
 ShowContentRatingEnum = Enum(
     ShowContentRating,
     name="show_content_rating_enum",
-    metadata=DB_METADATA,
+    metadata=CONTENT_METADATA,
 )

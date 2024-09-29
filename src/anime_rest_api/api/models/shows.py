@@ -1,6 +1,6 @@
 from pydantic import computed_field
 
-from anime_rest_api.db import ShowRead
+from anime_rest_api.db.models.content import ShowRead
 
 from .base import Base
 
