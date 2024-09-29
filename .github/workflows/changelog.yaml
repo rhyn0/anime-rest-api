@@ -1,4 +1,4 @@
-name: Check File Changes
+name: CI / CHANGELOG
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
       - reopened
       - ready_for_review
 jobs:
-  check-file-changes:
+  require-changelog:
     runs-on: ubuntu-latest
 
     steps:
