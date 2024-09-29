@@ -133,6 +133,7 @@ asyncio_mode = "strict"
 
 [tool.pytest_env]
 ANIME_API_DATABASE_URL = "postgresql+asyncpg://postgres:password@localhost:5432/test"
+ANIME_API_SECRET = "hello"
 
 [tool.mypy]
 mypy_path = "src/anime_rest_api"

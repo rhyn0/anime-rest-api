@@ -1,3 +1,4 @@
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncConnection
 from sqlalchemy.schema import CreateSchema
 from sqlalchemy.schema import DropSchema
@@ -19,6 +20,7 @@ __all__ = [
 
 async def setup_db(conn: AsyncConnection) -> None:
     """Setup the database."""
+    await conn.execute(text("CREATE EXTENSION IF NOT EXISTS pgcrypto"))
     for meta in [CONTENT_METADATA, AUTH_METADATA]:
         await conn.execute(CreateSchema(meta.schema, if_not_exists=True))
         await conn.run_sync(meta.create_all)

@@ -1,0 +1,5 @@
+kind: Added
+body: Add user authentication via passwords to get JWT
+time: 2024-09-29T12:39:41.039068-07:00
+custom:
+  Author: rhyn0
