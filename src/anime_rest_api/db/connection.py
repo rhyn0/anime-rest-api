@@ -17,17 +17,13 @@ class DatabaseConnection:
     _instance: Self
 
     def __new__(cls, *_args: tuple, **_kwargs: dict) -> Self:
-        """Instantiate object in Singelton pattern.
-
-        Raises error if instance already exists.
-        """
-        if hasattr(cls, "_instance"):
-            msg = f"{cls.__name__}.__new__"
-            raise InvalidDbConnectionStateError(msg)
+        """Instantiate object in Singelton pattern."""
+        if hasattr(cls, "_instance") and cls._instance is not None:
+            return cls._instance
         cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, db_url: str | URL, *, echo: bool = False) -> None:
+    def __init__(self, db_url: str | URL | None, *, echo: bool = False) -> None:
         """Initialize DatabaseConnection object with database url.
 
         Args:
@@ -36,6 +32,8 @@ class DatabaseConnection:
             echo (bool, optional): Whether to echo SQL statements to stderr.
                 Default False.
         """
+        if db_url is None:
+            return
         self.echo = echo
         self._engine = create_async_engine(db_url, echo=echo)
         self._session = async_sessionmaker(self._engine)
@@ -63,4 +61,4 @@ class DatabaseConnection:
             yield session
 
 
-Db = DatabaseConnection(os.environ["ANIME_API_DATABASE_URL"], echo=False)
+Db = DatabaseConnection(os.getenv("ANIME_API_DATABASE_URL"), echo=False)

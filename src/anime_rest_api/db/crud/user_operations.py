@@ -1,9 +1,12 @@
 from collections.abc import Sequence
 
+from sqlalchemy import ColumnElement
 from sqlalchemy import Function
+from sqlalchemy import Result
 from sqlalchemy import func
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import and_
 from sqlmodel import select
 
 from anime_rest_api.db.models.auth import User
@@ -25,7 +28,19 @@ def password_salt_hash_statement(password: str) -> Function:
     Returns:
         str: SQL statement to hash the password
     """
-    return func.crypt(password, func.gen_salt("bf", 8))
+    return func.crypt(password, func.gen_salt("bf", 10))
+
+
+def password_hash_check(password: str) -> ColumnElement[bool]:
+    """Hash a password with a salt.
+
+    Args:
+        password (str): Password to hash
+
+    Returns:
+        ColumnElement[bool]: Usable statement for WHERE clause.
+    """
+    return func.crypt(password, User.password_hash) == User.password_hash
 
 
 async def list_users(
@@ -44,7 +59,6 @@ async def list_users(
         session (AsyncSession): Database session
         offset (int): Offset for pagination
         limit (int): Limit for pagination
-        requesting_user (UserRead): User making the request
 
     Returns:
         Sequence[UserRead]: List of users
@@ -52,9 +66,9 @@ async def list_users(
     # issue here where mypy detects that the column is int | None
     # but the database version is int
     statement = select(User).order_by(User.user_id).offset(offset).limit(limit)  # type: ignore[arg-type]
-    result = await session.execute(statement)
+    result: Result[tuple[UserRead]] = await session.execute(statement)
     # since this is coming from DB, the UserRead model is correct as `user_id` is set
-    return result.scalars().all()  # type: ignore[return-value]
+    return result.scalars().all()
 
 
 async def get_user(
@@ -81,6 +95,42 @@ async def get_user(
     user = result.scalars().first()
     if user is None:
         raise EntryNotFoundError(User.__tablename__, user_id)
+
+    return user  # type: ignore[return-value]
+
+
+async def get_user_login(
+    session: AsyncSession,
+    username: str,
+    password: str,
+) -> UserRead:
+    """Get a user by its ID.
+
+    Any user can make this call as we want to allow navigating to a user's profile.
+    But only by knowing the id, not by listing and finding.
+
+    Raises:
+        EntryNotFoundError: If user_id does not exist in table.
+        MultipleEntriesFoundError: If multiple users are found with the same ID.
+
+    Args:
+        session (AsyncSession): Database session
+        username (str): ID of the user to get
+        password (str): password to check
+
+    Returns:
+        UserRead: User with the given id
+    """
+    statement = select(User).where(
+        and_(
+            User.username == username,
+            password_hash_check(password),
+        ),
+    )
+    result = await session.execute(statement)
+    user = result.scalars().one_or_none()
+    if user is None:
+        raise EntryNotFoundError(User.__tablename__, username)
 
     return user  # type: ignore[return-value]
 
@@ -186,4 +236,30 @@ async def delete_user(session: AsyncSession, user_id: int) -> UserRead:
         raise EntryNotFoundError(User.__tablename__, user_id)
     await session.delete(db_user)
     await session.commit()
+    return db_user
+
+
+async def increment_user_session_version(
+    session: AsyncSession,
+    user_id: int,
+) -> UserRead:
+    """Increment the session version of a user.
+
+    Args:
+        session (AsyncSession): Database session.
+        user_id (int): ID of the user to increment the session version.
+
+    Raises:
+        EntryNotFoundError: If user with ID does not exist.
+
+    Returns:
+        UserRead: User that was updated
+    """
+    db_user = await get_user(session, user_id)
+    if db_user is None:
+        raise EntryNotFoundError(User.__tablename__, user_id)
+    db_user.session_version += 1
+    session.add(db_user)
+    await session.commit()
+    await session.refresh(db_user)
     return db_user

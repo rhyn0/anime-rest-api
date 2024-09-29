@@ -7,6 +7,7 @@ from fastapi import FastAPI
 
 from anime_rest_api import __version__
 from anime_rest_api.api.log import LogConfig
+from anime_rest_api.api.routers import SESSION_ROUTER
 from anime_rest_api.api.routers import SHOW_ROUTER
 from anime_rest_api.api.routers import USER_ROUTER
 from anime_rest_api.db import setup_db
@@ -19,7 +20,7 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
     logging.config.dictConfig(
         LogConfig(LOGGER_NAME="anime-api", LOG_LEVEL="DEBUG").model_dump(),
     )
-    async with Db.engine.begin() as conn:
+    async with Db.instance().engine.begin() as conn:
         await setup_db(conn)
     yield
 
@@ -36,4 +37,5 @@ def create_app() -> FastAPI:
     )
     app.include_router(SHOW_ROUTER)
     app.include_router(USER_ROUTER)
+    app.include_router(SESSION_ROUTER)
     return app
