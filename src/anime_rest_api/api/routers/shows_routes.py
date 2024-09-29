@@ -7,14 +7,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from anime_rest_api.api.common_query import limit_and_offset_query
 from anime_rest_api.api.dependencies import DbDependency
 from anime_rest_api.api.models import ShowResponseList
-from anime_rest_api.db import ShowRead
-from anime_rest_api.db.crud import create_show
-from anime_rest_api.db.crud import delete_show
-from anime_rest_api.db.crud import get_show
-from anime_rest_api.db.crud import list_shows
-from anime_rest_api.db.crud import update_show
-from anime_rest_api.db.models.shows import ShowCreate
-from anime_rest_api.db.models.shows import ShowUpdate
+from anime_rest_api.db.crud.show_operations import create_show
+from anime_rest_api.db.crud.show_operations import delete_show
+from anime_rest_api.db.crud.show_operations import get_show
+from anime_rest_api.db.crud.show_operations import list_shows
+from anime_rest_api.db.crud.show_operations import update_show
+from anime_rest_api.db.models.content import ShowCreate
+from anime_rest_api.db.models.content import ShowRead
+from anime_rest_api.db.models.content import ShowUpdate
 
 ROUTER = APIRouter(prefix="/shows", tags=["shows"])
 
@@ -68,8 +68,8 @@ async def update_show_route(
 async def delete_show_route(
     show_id: int,
     session: Annotated[AsyncSession, DbDependency],
-) -> None:
+) -> ShowRead:
     """Delete a show by its ID."""
     # TODO(Ryan): this can raise an error if the show is not found
     # need to add a exception handler to app
-    await delete_show(session, show_id)
+    return await delete_show(session, show_id)  # type: ignore[return-value]

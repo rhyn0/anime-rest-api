@@ -5,6 +5,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "asyncpg>=0.29.0",
+    "email-validator>=2.2.0",
     "fastapi>=0.114.2",
     "greenlet>=3.1.0",
     "pydantic>=2.9.1",
@@ -82,6 +83,9 @@ select = ["ALL"]
 "scripts/*.py" = [
     "INP001", # Implicit namespace package
 ]
+"src/anime_rest_api/api/routers/**.py" = [
+    "ANN201", # Missing return type annotation for public function
+]
 
 [tool.ruff.lint.flake8-errmsg]
 # Maximum string length for string literals in exception messages.
@@ -127,6 +131,7 @@ python_version = "3.12"
 warn_unreachable = true
 warn_unused_ignores = true
 warn_unused_configs = true
+enable_incomplete_feature = "NewGenericSyntax"
 
 [[tool.mypy.overrides]]
 module = "tests.*"

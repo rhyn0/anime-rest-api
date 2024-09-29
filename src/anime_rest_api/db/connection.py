@@ -1,5 +1,4 @@
 from collections.abc import AsyncGenerator
-from contextlib import asynccontextmanager
 import os
 from typing import Self
 
@@ -58,7 +57,6 @@ class DatabaseConnection:
         """Public getter for the engine."""
         return self._engine
 
-    @asynccontextmanager
     async def session(self) -> AsyncGenerator[AsyncSession, None]:
         """Public getter for the session."""
         async with self._session() as session:
