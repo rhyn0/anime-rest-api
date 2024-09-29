@@ -1,9 +1,17 @@
 import argparse
 
+# need this type ignore because of CI, not having access to all of our packages.
+from dotenv import find_dotenv  # type: ignore[import-not-found]
+from dotenv import load_dotenv
 from uvicorn import Config
 from uvicorn import Server
 
-from anime_rest_api.api import create_app
+load_dotenv(
+    find_dotenv(".env.production", raise_error_if_not_found=True, usecwd=False),
+    verbose=True,
+)
+
+# have to make sure environment variables are loaded first
 
 
 def get_args(arglist: list[str] | None = None) -> argparse.Namespace:
@@ -37,9 +45,12 @@ def main(args: argparse.Namespace) -> None:
 
     TODO: uvicorn might not be our best choice long term depending on deployment plans
     """
-    app = create_app()
-    uv_config = Config(app=app, host=args.host, port=args.port)
-
+    uv_config = Config(
+        app="anime_rest_api.api:create_app",
+        host=args.host,
+        port=args.port,
+        factory=True,
+    )
     server = Server(uv_config)
     server.run()
 

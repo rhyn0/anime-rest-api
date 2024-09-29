@@ -4,6 +4,9 @@ import asyncio
 import os
 import sys
 
+from dotenv import load_dotenv  # type: ignore[import-not-found]
+load_dotenv("src/anime_rest_api/.env.production")
+
 from sqlalchemy.schema import DropSchema
 from sqlalchemy.ext.asyncio import AsyncConnection
 
