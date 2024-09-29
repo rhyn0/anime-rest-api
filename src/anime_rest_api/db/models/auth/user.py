@@ -14,6 +14,7 @@ class UserBase(SQLModel):
     last_name: str
     password_hash: str
     is_admin: bool = False
+    session_version: int = 1
 
 
 class User(UserBase, table=True):
