@@ -3,7 +3,7 @@
 # Update this file:
 #   pre-commit autoupdate
 fail_fast: true
-exclude: ^.vscode/$
+exclude: ^(.vscode/|scripts/)$
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
