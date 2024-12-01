@@ -22,7 +22,7 @@ async def setup_db(conn: AsyncConnection) -> None:
     """Setup the database."""
     await conn.execute(text("CREATE EXTENSION IF NOT EXISTS pgcrypto"))
     for meta in [CONTENT_METADATA, AUTH_METADATA]:
-        await conn.execute(CreateSchema(meta.schema, if_not_exists=True))
+        await conn.execute(CreateSchema(meta.schema, if_not_exists=True))  # type: ignore[arg-type]
         await conn.run_sync(meta.create_all)
 
 
@@ -30,4 +30,4 @@ async def clean_db(conn: AsyncConnection) -> None:
     """Drop all tables and schemas."""
     for meta in [CONTENT_METADATA, AUTH_METADATA]:
         await conn.run_sync(meta.drop_all)
-        await conn.execute(DropSchema(meta.schema, cascade=True))
+        await conn.execute(DropSchema(meta.schema, cascade=True)) # type: ignore[arg-type]
