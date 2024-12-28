@@ -41,7 +41,7 @@ async def insert_example_data(conn: AsyncConnection) -> None:
 
 def main(args: argparse.Namespace) -> int:
     os.environ["ANIME_API_DATABASE_URL"] = args.database_url
-    del DatabaseConnection._instance
+    del DatabaseConnection._instance  # type: ignore[misc]
     dbc = DatabaseConnection(args.database_url, echo=True)
     asyncio.run(_db_calls(dbc))
     return 0
