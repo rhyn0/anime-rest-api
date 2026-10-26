@@ -30,4 +30,4 @@ async def clean_db(conn: AsyncConnection) -> None:
     """Drop all tables and schemas."""
     for meta in [CONTENT_METADATA, AUTH_METADATA]:
         await conn.run_sync(meta.drop_all)
-        await conn.execute(DropSchema(meta.schema, cascade=True)) # type: ignore[arg-type]
+        await conn.execute(DropSchema(meta.schema, cascade=True))  # type: ignore[arg-type]

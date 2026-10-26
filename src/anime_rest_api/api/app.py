@@ -7,15 +7,18 @@ from fastapi import FastAPI
 
 from anime_rest_api import __version__
 from anime_rest_api.api.log import LogConfig
+from anime_rest_api.api.routers import EPISODES_ROUTER
 from anime_rest_api.api.routers import SESSION_ROUTER
 from anime_rest_api.api.routers import SHOW_ROUTER
+from anime_rest_api.api.routers import USER_EPISODES_ROUTER
 from anime_rest_api.api.routers import USER_ROUTER
+from anime_rest_api.api.routers import USER_SHOWS_ROUTER
 from anime_rest_api.db import setup_db
 from anime_rest_api.db.connection import Db
 
 
 @asynccontextmanager
-async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     """Run on-startup and on-shutdown code."""
     logging.config.dictConfig(
         LogConfig(LOGGER_NAME="anime-api", LOG_LEVEL="DEBUG").model_dump(),
@@ -38,4 +41,7 @@ def create_app() -> FastAPI:
     app.include_router(SHOW_ROUTER)
     app.include_router(USER_ROUTER)
     app.include_router(SESSION_ROUTER)
+    app.include_router(EPISODES_ROUTER)
+    app.include_router(USER_SHOWS_ROUTER)
+    app.include_router(USER_EPISODES_ROUTER)
     return app
