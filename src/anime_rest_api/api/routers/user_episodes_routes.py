@@ -33,7 +33,9 @@ async def read_user_episodes_route(
     limit, offset = limit_and_offset
     user_episodes = list(await list_user_episodes(session, offset, limit + 1, user_id))
     has_more = len(user_episodes) > limit
-    return UserEpisodeRatingResponseList(user_episodes=user_episodes[:limit], has_more=has_more)
+    return UserEpisodeRatingResponseList(
+        user_episodes=user_episodes[:limit], has_more=has_more,  # type: ignore[arg-type]
+    )
 
 
 @ROUTER.post("", response_model=UserEpisodeRatingRead)
@@ -42,7 +44,7 @@ async def create_user_episode_route(
     session: Annotated[AsyncSession, DbDependency],
 ) -> UserEpisodeRatingRead:
     """Create a new user episode rating."""
-    return await create_user_episode(session, user_episode_body)
+    return await create_user_episode(session, user_episode_body)  # type: ignore[return-value]
 
 
 @ROUTER.get("/{user_id}/{episode_id}", response_model=UserEpisodeRatingRead)
@@ -52,13 +54,14 @@ async def read_user_episode_route(
     session: Annotated[AsyncSession, DbDependency],
     current_user: Annotated[JwtUser, Depends(requesting_user_header)],
 ) -> UserEpisodeRatingRead:
+    """Route operation."""
     if current_user.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     """Get a user episode rating by user ID and episode ID."""
     user_episode = await get_user_episode(session, user_id, episode_id)
     if user_episode is None:
         raise HTTPException(status_code=404, detail="UserEpisodeRating not found")
-    return user_episode
+    return user_episode  # type: ignore[return-value]
 
 
 @ROUTER.patch("/{user_id}/{episode_id}", response_model=UserEpisodeRatingRead)
@@ -69,10 +72,11 @@ async def update_user_episode_route(
     session: Annotated[AsyncSession, DbDependency],
     current_user: Annotated[JwtUser, Depends(requesting_user_header)],
 ) -> UserEpisodeRatingRead:
+    """Route operation."""
     if current_user.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     """Update a user episode rating."""
-    return await update_user_episode(session, user_id, episode_id, user_episode_body)
+    return await update_user_episode(session, user_id, episode_id, user_episode_body)  # type: ignore[return-value]
 
 
 @ROUTER.delete("/{user_id}/{episode_id}", response_model=UserEpisodeRatingRead)
@@ -82,7 +86,8 @@ async def delete_user_episode_route(
     session: Annotated[AsyncSession, DbDependency],
     current_user: Annotated[JwtUser, Depends(requesting_user_header)],
 ) -> UserEpisodeRatingRead:
+    """Route operation."""
     if current_user.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     """Delete a user episode rating."""
-    return await delete_user_episode(session, user_id, episode_id)
+    return await delete_user_episode(session, user_id, episode_id)  # type: ignore[return-value]

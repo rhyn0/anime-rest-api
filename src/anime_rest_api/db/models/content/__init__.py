@@ -21,7 +21,6 @@ from .user_shows import UserShowStatusRead
 from .user_shows import UserShowStatusUpdate
 
 __all__ = [
-
     "CONTENT_METADATA",
     "ShowBase",
     "Show",

@@ -31,7 +31,7 @@ async def read_episodes_route(
     limit, offset = limit_and_offset
     episodes = list(await list_episodes(session, offset, limit + 1, show_id))
     has_more = len(episodes) > limit
-    return EpisodeResponseList(episodes=episodes[:limit], has_more=has_more)
+    return EpisodeResponseList(episodes=episodes[:limit], has_more=has_more)  # type: ignore[arg-type]
 
 
 @ROUTER.post("", response_model=EpisodeRead)
@@ -40,7 +40,7 @@ async def create_episode_route(
     session: Annotated[AsyncSession, DbDependency],
 ) -> EpisodeRead:
     """Create a new episode."""
-    return await create_episode(session, episode_body)
+    return await create_episode(session, episode_body)  # type: ignore[return-value]
 
 
 @ROUTER.get("/{episode_id}", response_model=EpisodeRead)
@@ -52,7 +52,7 @@ async def read_episode_route(
     episode = await get_episode(session, episode_id)
     if episode is None:
         raise HTTPException(status_code=404, detail="Episode not found")
-    return episode
+    return episode  # type: ignore[return-value]
 
 
 @ROUTER.patch("/{episode_id}", response_model=EpisodeRead)
@@ -62,7 +62,7 @@ async def update_episode_route(
     session: Annotated[AsyncSession, DbDependency],
 ) -> EpisodeRead:
     """Update an episode by its ID."""
-    return await update_episode(session, episode_id, episode_body)
+    return await update_episode(session, episode_id, episode_body)  # type: ignore[return-value]
 
 
 @ROUTER.delete("/{episode_id}", response_model=EpisodeRead)
@@ -71,4 +71,4 @@ async def delete_episode_route(
     session: Annotated[AsyncSession, DbDependency],
 ) -> EpisodeRead:
     """Delete an episode by its ID."""
-    return await delete_episode(session, episode_id)
+    return await delete_episode(session, episode_id)  # type: ignore[return-value]

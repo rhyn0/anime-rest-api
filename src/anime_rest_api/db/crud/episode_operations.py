@@ -10,12 +10,14 @@ from anime_rest_api.db.models.content.episodes import EpisodeUpdate
 from .errors import EntryNotFoundError
 
 
-async def list_episodes(session: AsyncSession, offset: int, limit: int, show_id: int | None = None) -> Sequence[Episode]:
+async def list_episodes(
+    session: AsyncSession, offset: int, limit: int, show_id: int | None = None,
+) -> Sequence[Episode]:
     """List episodes."""
     statement = select(Episode)
     if show_id is not None:
         statement = statement.where(Episode.show_id == show_id)
-    statement = statement.order_by(Episode.episode_id).offset(offset).limit(limit)
+    statement = statement.order_by(Episode.episode_id).offset(offset).limit(limit)  # type: ignore[arg-type]
     result = await session.execute(statement)
     return result.scalars().all()
 
@@ -36,7 +38,9 @@ async def create_episode(session: AsyncSession, episode: EpisodeCreate) -> Episo
     return db_episode
 
 
-async def update_episode(session: AsyncSession, episode_id: int, episode: EpisodeUpdate) -> Episode:
+async def update_episode(
+    session: AsyncSession, episode_id: int, episode: EpisodeUpdate,
+) -> Episode:
     """Update an episode."""
     db_episode = await get_episode(session, episode_id)
     if db_episode is None:

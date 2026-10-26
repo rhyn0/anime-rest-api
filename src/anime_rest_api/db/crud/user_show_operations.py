@@ -10,7 +10,9 @@ from anime_rest_api.db.models.content.user_shows import UserShowStatusUpdate
 from .errors import EntryNotFoundError
 
 
-async def list_user_shows(session: AsyncSession, offset: int, limit: int, user_id: int | None = None) -> Sequence[UserShowStatus]:
+async def list_user_shows(
+    session: AsyncSession, offset: int, limit: int, user_id: int | None = None,
+) -> Sequence[UserShowStatus]:
     """List user show statuses."""
     statement = select(UserShowStatus)
     if user_id is not None:
@@ -20,7 +22,9 @@ async def list_user_shows(session: AsyncSession, offset: int, limit: int, user_i
     return result.scalars().all()
 
 
-async def get_user_show(session: AsyncSession, user_id: int, show_id: int) -> UserShowStatus | None:
+async def get_user_show(
+    session: AsyncSession, user_id: int, show_id: int,
+) -> UserShowStatus | None:
     """Get a user show status by user ID and show ID."""
     statement = select(UserShowStatus).where(
         UserShowStatus.user_id == user_id,
@@ -30,7 +34,9 @@ async def get_user_show(session: AsyncSession, user_id: int, show_id: int) -> Us
     return result.scalars().first()
 
 
-async def create_user_show(session: AsyncSession, user_show: UserShowStatusCreate) -> UserShowStatus:
+async def create_user_show(
+    session: AsyncSession, user_show: UserShowStatusCreate,
+) -> UserShowStatus:
     """Create a user show status."""
     db_user_show = UserShowStatus.model_validate(user_show)
     session.add(db_user_show)
@@ -39,11 +45,15 @@ async def create_user_show(session: AsyncSession, user_show: UserShowStatusCreat
     return db_user_show
 
 
-async def update_user_show(session: AsyncSession, user_id: int, show_id: int, user_show: UserShowStatusUpdate) -> UserShowStatus:
+async def update_user_show(
+    session: AsyncSession, user_id: int, show_id: int, user_show: UserShowStatusUpdate,
+) -> UserShowStatus:
     """Update a user show status."""
     db_user_show = await get_user_show(session, user_id, show_id)
     if db_user_show is None:
-        raise EntryNotFoundError(UserShowStatus.__tablename__, f"user_id={user_id}, show_id={show_id}")
+        raise EntryNotFoundError(
+            UserShowStatus.__tablename__, f"user_id={user_id}, show_id={show_id}",
+        )
     db_user_show.sqlmodel_update(user_show.model_dump(exclude_unset=True))
     session.add(db_user_show)
     await session.commit()
@@ -51,11 +61,15 @@ async def update_user_show(session: AsyncSession, user_id: int, show_id: int, us
     return db_user_show
 
 
-async def delete_user_show(session: AsyncSession, user_id: int, show_id: int) -> UserShowStatus:
+async def delete_user_show(
+    session: AsyncSession, user_id: int, show_id: int,
+) -> UserShowStatus:
     """Delete a user show status."""
     user_show = await get_user_show(session, user_id, show_id)
     if user_show is None:
-        raise EntryNotFoundError(UserShowStatus.__tablename__, f"user_id={user_id}, show_id={show_id}")
+        raise EntryNotFoundError(
+            UserShowStatus.__tablename__, f"user_id={user_id}, show_id={show_id}",
+        )
     await session.delete(user_show)
     await session.commit()
     return user_show

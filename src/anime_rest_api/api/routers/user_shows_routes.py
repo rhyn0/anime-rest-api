@@ -33,7 +33,7 @@ async def read_user_shows_route(
     limit, offset = limit_and_offset
     user_shows = list(await list_user_shows(session, offset, limit + 1, user_id))
     has_more = len(user_shows) > limit
-    return UserShowStatusResponseList(user_shows=user_shows[:limit], has_more=has_more)
+    return UserShowStatusResponseList(user_shows=user_shows[:limit], has_more=has_more)  # type: ignore[arg-type]
 
 
 @ROUTER.post("", response_model=UserShowStatusRead)
@@ -42,7 +42,7 @@ async def create_user_show_route(
     session: Annotated[AsyncSession, DbDependency],
 ) -> UserShowStatusRead:
     """Create a new user show status."""
-    return await create_user_show(session, user_show_body)
+    return await create_user_show(session, user_show_body)  # type: ignore[return-value]
 
 
 @ROUTER.get("/{user_id}/{show_id}", response_model=UserShowStatusRead)
@@ -52,13 +52,14 @@ async def read_user_show_route(
     session: Annotated[AsyncSession, DbDependency],
     current_user: Annotated[JwtUser, Depends(requesting_user_header)],
 ) -> UserShowStatusRead:
+    """Route operation."""
     if current_user.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     """Get a user show status by user ID and show ID."""
     user_show = await get_user_show(session, user_id, show_id)
     if user_show is None:
         raise HTTPException(status_code=404, detail="UserShowStatus not found")
-    return user_show
+    return user_show  # type: ignore[return-value]
 
 
 @ROUTER.patch("/{user_id}/{show_id}", response_model=UserShowStatusRead)
@@ -69,10 +70,11 @@ async def update_user_show_route(
     session: Annotated[AsyncSession, DbDependency],
     current_user: Annotated[JwtUser, Depends(requesting_user_header)],
 ) -> UserShowStatusRead:
+    """Route operation."""
     if current_user.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     """Update a user show status."""
-    return await update_user_show(session, user_id, show_id, user_show_body)
+    return await update_user_show(session, user_id, show_id, user_show_body)  # type: ignore[return-value]
 
 
 @ROUTER.delete("/{user_id}/{show_id}", response_model=UserShowStatusRead)
@@ -82,7 +84,8 @@ async def delete_user_show_route(
     session: Annotated[AsyncSession, DbDependency],
     current_user: Annotated[JwtUser, Depends(requesting_user_header)],
 ) -> UserShowStatusRead:
+    """Route operation."""
     if current_user.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     """Delete a user show status."""
-    return await delete_user_show(session, user_id, show_id)
+    return await delete_user_show(session, user_id, show_id)  # type: ignore[return-value]
